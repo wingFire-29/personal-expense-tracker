@@ -1,0 +1,15 @@
+create a summary docs containing:
+
+what i am doing 
+
+whats my goal
+
+What are the different phases of the project
+
+Current phase info
+
+whats next 
+
+whats the status 
+
+and what to do next
