@@ -6,34 +6,29 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from datetime import datetime
 
-# =====================
-# DEBUG
-# =====================
 print("=== BOT STARTING ===")
 
 # =====================
 # LOAD CREDENTIALS
 # =====================
-try:
-    with open("credentials.json", "r") as f:
-        google_creds = json.load(f)
-    print("Credentials loaded successfully")
-except Exception as e:
-    raise ValueError(f"Could not load credentials.json: {e}")
-
-# =====================
-# CONFIG
-# =====================
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN not found")
 
-SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+creds_raw = os.getenv("GOOGLE_CREDENTIALS")
+if not creds_raw:
+    raise ValueError("GOOGLE_CREDENTIALS not found")
 
+google_creds = json.loads(creds_raw)
+print("Credentials loaded successfully")
+
+# =====================
+# CONNECT GOOGLE SHEETS
+# =====================
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 creds = Credentials.from_service_account_info(google_creds, scopes=SCOPES)
 client = gspread.authorize(creds)
 sheet = client.open_by_key("1szlGWdA8GWq9jkzAm3ZGxFbbuaGNbXeiIFjQoA26fyM").worksheet("Sheet1")
-
 print("Google Sheets connected successfully")
 
 # =====================
