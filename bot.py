@@ -26,9 +26,11 @@ if not creds_raw:
     raise ValueError("GOOGLE_CREDENTIALS not found in environment variables")
 
 try:
-    google_creds = json.loads(creds_raw)
-except json.JSONDecodeError as e:
-    raise ValueError(f"GOOGLE_CREDENTIALS is not valid JSON: {e}")
+    with open("credentials.json", "r") as f:
+        google_creds = json.load(f)
+    print("Credentials loaded successfully")
+except Exception as e:
+    raise ValueError(f"Could not load credentials.json: {e}")
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
