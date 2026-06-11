@@ -7,30 +7,26 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 from datetime import datetime
 
 # =====================
-# DEBUG - REMOVE LATER
+# DEBUG
 # =====================
-print("=== ENV DEBUG ===")
-print("BOT_TOKEN exists:", os.getenv("BOT_TOKEN") is not None)
-print("GOOGLE_CREDENTIALS exists:", os.getenv("GOOGLE_CREDENTIALS") is not None)
+print("=== BOT STARTING ===")
 
 # =====================
-# CONFIG
+# LOAD CREDENTIALS
 # =====================
-
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-if not BOT_TOKEN:
-    raise ValueError("BOT_TOKEN not found in environment variables")
-
-creds_raw = os.getenv("GOOGLE_CREDENTIALS")
-if not creds_raw:
-    raise ValueError("GOOGLE_CREDENTIALS not found in environment variables")
-
 try:
     with open("credentials.json", "r") as f:
         google_creds = json.load(f)
     print("Credentials loaded successfully")
 except Exception as e:
     raise ValueError(f"Could not load credentials.json: {e}")
+
+# =====================
+# CONFIG
+# =====================
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN not found")
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
@@ -43,7 +39,6 @@ print("Google Sheets connected successfully")
 # =====================
 # COMMANDS
 # =====================
-
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "Expense Tracker Ready!\n\n"
@@ -77,7 +72,6 @@ async def expense(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # =====================
 # MAIN
 # =====================
-
 app = Application.builder().token(BOT_TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("expense", expense))
