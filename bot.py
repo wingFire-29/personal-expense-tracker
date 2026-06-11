@@ -8,6 +8,7 @@ from datetime import datetime
 
 print("=== BOT STARTING ===")
 
+
 # =====================
 # LOAD CREDENTIALS
 # =====================
@@ -20,6 +21,9 @@ if not creds_raw:
     raise ValueError("GOOGLE_CREDENTIALS not found")
 
 google_creds = json.loads(creds_raw)
+
+# Fix private key newlines
+google_creds["private_key"] = google_creds["private_key"].replace("\\n", "\n")
 print("Credentials loaded successfully")
 
 # =====================
