@@ -1,5 +1,7 @@
 import os
 import json
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 import gspread
 from google.oauth2.service_account import Credentials
 from telegram import Update
@@ -31,6 +33,22 @@ creds = Credentials.from_service_account_info(google_creds, scopes=SCOPES)
 client = gspread.authorize(creds)
 sheet = client.open_by_key("1szlGWdA8GWq9jkzAm3ZGxFbbuaGNbXeiIFjQoA26fyM").worksheet("Sheet1")
 print("Google Sheets connected successfully")
+
+# =====================
+# KEEP-ALIVE SERVER
+# =====================
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Bot is running")
+    def log_message(self, format, *args):
+        pass
+
+def run_server():
+    HTTPServer(("0.0.0.0", 8080), Handler).serve_forever()
+
+threading.Thread(target=run_server, daemon=True).start()
 
 # =====================
 # COMMANDS
