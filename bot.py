@@ -3,7 +3,7 @@ import json
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import gspread
-import google.generativeai as genai
+from google import genai
 from google.oauth2.service_account import Credentials
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
@@ -42,8 +42,7 @@ print("Google Sheets connected successfully")
 # =====================
 # SETUP GEMINI
 # =====================
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 print("Gemini AI connected successfully")
 
 # =====================
@@ -81,7 +80,11 @@ If you cannot find an amount, respond with:
 {{"error": "no amount found"}}
 """
     try:
-        response = model.generate_content(prompt)
+        
+        response = gemini_client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
         text_response = response.text.strip()
         # Clean markdown if present
         text_response = text_response.replace("```json", "").replace("```", "").strip()
