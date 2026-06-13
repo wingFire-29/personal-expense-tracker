@@ -174,4 +174,4 @@ app.add_handler(CommandHandler("expense", expense))
 app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
 print("Bot Started Successfully")
-app.run_polling(drop_pending_updates=True)
+app.run_polling(drop_pending_updates=True, allowed_updates=Update.ALL_TYPES)
